@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+		<title>罗盘</title>
+		<link rel="stylesheet" type="text/css" href="./css/style.css" />
+
+		<style type="text/css">
+			#camera {
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				top: 0;
+			}
+
+			.deg-img {
+				display: none;
+			}
+
+			.noAllow {
+				pointer-events: none !important;
+			}
+
+			.tools li p {
+				/* color: #fff; */
+			}
+		</style>
+	</head>
+	<body>
+		<div class="scroll">
+
+		<video id="camera" autoplay playsinline></video>
+
+		<!-- header -->
+		<div class="header">
+			
+		</div>
+		<!-- top-tool -->
+		<div class="top-tool">
+		</div>
+
+		<!-- pan -->
+		<div class="pan noAllow">
+			<!-- jia&jian -->
+			<div class="jia_btn">+</div>
+			<div class="jian_btn">-</div>
+			<!-- line -->
+			<span class="line line-heng"></span>
+			<span class="line line-shu"></span>
+			<img class="main-pan" id="compass" src="compass/pan-map.png">
+			<img class="deg-img" src="./img/a2.png" alt="" srcset="">
+			<img class="zhen-img" src="./img/a3.png" alt="" srcset="">
+		</div>
+		<!-- tools -->
+		<ul class="tools">
+			<li id="switch">
+				<div class="top">
+					<img src="compass/001.png">
+				</div>
+				<p>模式</p>
+			</li>
+			<li id="lock">
+				<div class="top">
+					<img src="compass/004.png">
+				</div>
+				<p>锁定</p>
+			</li>
+			<li id="manual">
+				<div class="top">
+					<img src="compass/005.png">
+				</div>
+				<p>手动</p>
+			</li>
+			<li id="fold">
+				<div class="top">
+					<img src="compass/003.png">
+				</div>
+				<p>收起</p>
+			</li>
+			<li id="change">
+				<div class="top">
+					<img src="compass/002.png">
+				</div>
+				<p>换盘</p>
+			</li>
+		</ul>
+		</div>
+		<script src="js/switch.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/map.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			var video = document.getElementById('camera')
+			var clientWidth = document.body.clientWidth
+			var clientHeight = document.body.offsetHeight
+
+			var constraints = window.constraints = {
+				video: {
+					width: { min: 1024, ideal: 1280, max: 1920 },
+					height: { min: 776, ideal: 720, max: 1080 },
+					facingMode: {
+						exact: "environment"
+					}
+				}
+			};
+
+			function handleSuccess(stream) {
+				var videoTracks = stream.getVideoTracks();
+				console.log('Using video device: ' + videoTracks[0].label);
+				video.srcObject = stream;
+			}
+
+			function handleError(error) {
+				alert(error);
+				console.log('getUserMedia error: ' + error.name, error);
+			}
+
+			navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError);
+
+
+
+
+
+			var change = document.getElementById('change')
+			var compass = document.getElementById('compass')
+			var panBg = [
+				'compass/pan-map-yellow.png',
+				'compass/pan-map.png',
+				'compass/pan.png'
+			]
+			var num = 0
+			change.addEventListener('touchstart', function() {
+				this.children[0].classList.add('active')
+			})
+			change.addEventListener('touchend', function() {
+				num++
+				if (num >= panBg.length) {
+					num = 0
+				}
+				compass.src = panBg[num]
+				this.children[0].classList.remove('active')
+			})
+		</script>
+	</body>
+</html>
